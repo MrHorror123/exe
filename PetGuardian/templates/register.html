@@ -1,0 +1,37 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body></br></br></br></br></br>
+    <div align="center">
+        <div align="center" class="border">
+            <div class="header">
+                <h1 class="word">Register</h1>
+            </div></br></br></br>
+            <h2 class="word">
+                <form action="{{ url_for('register') }}" method="post">
+                    <div class="msg">{{ msg }}</div>
+                    <input id="username" name="username" type="text" placeholder="Enter Your Username" class="textbox"/></br></br>
+                    <input id="password" name="password" type="password" placeholder="Enter Your Password" class="textbox"/></br></br>
+                    <input id="email" name="email" type="text" placeholder="Enter Your Email ID" class="textbox"/></br></br>
+                    
+                    <!-- Thêm lựa chọn loại tài khoản (Customer/User) -->
+                    <label class="word">Select Account Type:</label></br>
+                    <input type="radio" id="customer" name="user_type" value="customer" required>
+                    <label for="customer" class="word">Customer</label></br>
+                    <input type="radio" id="user" name="user_type" value="user" required>
+                    <label for="user" class="word">User</label></br></br>
+
+                    <input type="submit" class="btn" value="Sign Up"></br>
+                </form>
+            </h2>
+            <p class="bottom">Already have an account? <a class="bottom" href="{{url_for('login')}}"> Sign In here</a></p>
+        </div>
+    </div>
+
+    <!-- Link to the JavaScript file -->
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>

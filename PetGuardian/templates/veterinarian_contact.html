@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinarian Contacts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            text-align: left;
+            display: inline-block;
+            margin: 0;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .add-contact-button {
+            text-align: center;
+        }
+        .add-button, .update-button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .add-button:hover, .update-button:hover {
+            background-color: #45a049;
+        }
+        .back-link {
+            margin-left: auto;
+        }
+        .existing-contacts-container {
+            margin-top: 40px;
+        }
+        /* Initially hide the edit form */
+        #editContactForm {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <h1>Veterinarian Contacts</h1>
+        <a class="back-link" href="{{ url_for('index_user') }}">Back to User Index</a>
+    </div>
+
+    <!-- Existing Contacts Section -->
+    <div class="existing-contacts-container">
+        <h2>Existing Contacts</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Language</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contact in contacts %}
+                <tr>
+                    <td>{{ contact.contact_name }}</td>
+                    <td>{{ contact.contact_gender }}</td>
+                    <td>{{ contact.contact_language }}</td>
+                    <td>{{ contact.contact_phone }}</td>
+                    <td>
+                        <a href="javascript:void(0)" onclick="showEditForm({{ contact.id }}, '{{ contact.contact_name }}', '{{ contact.contact_gender }}', '{{ contact.contact_language }}', '{{ contact.contact_phone }}')">Edit</a>
+                        <a href="{{ url_for('delete_contact', contact_id=contact.id) }}">Delete</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">No contacts available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add New Contact Button -->
+    <div class="add-contact-button">
+        <button class="add-button" onclick="toggleAddForm()">Add New Contact</button>
+    </div>
+
+    <!-- Add New Contact Form -->
+    <form id="addContactForm" method="POST" action="{{ url_for('add_contact') }}">
+        <h2>Add New Contact</h2>
+        <table>
+            <tr>
+                <td><label for="contact_name">Name:</label></td>
+                <td><input type="text" name="contact_name" required></td>
+            </tr>
+            <tr>
+                <td><label for="contact_gender">Gender:</label></td>
+                <td><input type="text" name="contact_gender" required></td>
+            </tr>
+            <tr>
+                <td><label for="contact_language">Language:</label></td>
+                <td><input type="text" name="contact_language" required></td>
+            </tr>
+            <tr>
+                <td><label for="contact_phone">Phone:</label></td>
+                <td><input type="text" name="contact_phone" required></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit">Add Contact</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <!-- Edit Contact Form -->
+    <form id="editContactForm" method="POST" action="">
+        <h2>Edit Veterinarian Contact</h2>
+        <table>
+            <tr>
+                <td><label for="edit_contact_name">Name:</label></td>
+                <td><input type="text" id="edit_contact_name" name="contact_name" required></td>
+            </tr>
+            <tr>
+                <td><label for="edit_contact_gender">Gender:</label></td>
+                <td><input type="text" id="edit_contact_gender" name="contact_gender" required></td>
+            </tr>
+            <tr>
+                <td><label for="edit_contact_language">Language:</label></td>
+                <td><input type="text" id="edit_contact_language" name="contact_language" required></td>
+            </tr>
+            <tr>
+                <td><label for="edit_contact_phone">Phone:</label></td>
+                <td><input type="text" id="edit_contact_phone" name="contact_phone" required></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit" class="update-button">Update Contact</button>
+                </td>
+            </tr>
+        </table>
+        <a href="javascript:void(0)" onclick="hideEditForm()">Cancel</a>
+    </form>
+
+    <script>
+        // Toggle visibility of Add New Contact form
+        function toggleAddForm() {
+            const addForm = document.getElementById('addContactForm');
+            const editForm = document.getElementById('editContactForm');
+            // Hide the edit form if it's currently visible
+            editForm.style.display = 'none';
+            // Toggle the visibility of the add form
+            addForm.style.display = addForm.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Show Edit Contact form and populate it with the selected contact's data
+        function showEditForm(id, name, gender, language, phone) {
+            const editForm = document.getElementById('editContactForm');
+            const addForm = document.getElementById('addContactForm');
+            // Hide the add form if it's currently visible
+            addForm.style.display = 'none';
+            // Show the edit form
+            editForm.style.display = 'block';
+
+            // Set the action URL for the edit form
+            editForm.action = `/edit_contact/${id}`;
+
+            // Populate the form fields with the contact data
+            document.getElementById('edit_contact_name').value = name;
+            document.getElementById('edit_contact_gender').value = gender;
+            document.getElementById('edit_contact_language').value = language;
+            document.getElementById('edit_contact_phone').value = phone;
+        }
+
+        // Hide the Edit Contact form
+        function hideEditForm() {
+            const editForm = document.getElementById('editContactForm');
+            editForm.style.display = 'none';
+        }
+
+        // Initially hide the Add form on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('addContactForm').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

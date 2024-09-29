@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        /* Styling for flexbox container */
+        .dashboard-sections {
+            display: flex;
+            justify-content: space-around; /* Evenly space the items */
+            flex-wrap: wrap; /* Ensure responsiveness */
+        }
+        .section {
+            width: 200px; /* Adjust width for each section */
+            padding: 20px;
+            border: 1px solid #ccc;
+            text-align: center;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome, {{ session['username'] }}!</h1>
+    <nav>
+        <a href="{{ url_for('index_user') }}">Home</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+
+    <!-- Dashboard sections aligned horizontally using flexbox -->
+    <div class="dashboard-sections">
+        <!-- Pets Management Section -->
+        <div class="section">
+            <h2><a href="{{ url_for('pets_page') }}">Pets</a></h2>
+        </div>
+
+        <!-- Veterinarian Contact Section -->
+        <div class="section">
+            <h2><a href="{{ url_for('veterinarian_contact') }}">Veterinarian Contact</a></h2>
+        </div>
+
+        <!-- Product Section -->
+        <div class="section">
+            <h2>Product</h2>
+        </div>
+
+        <!-- Reminder Section -->
+        <div class="section">
+            <h2>Reminder</h2>
+
+        </div>
+    </div>
+</body>
+</html>
